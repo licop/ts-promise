@@ -6,27 +6,28 @@ export default class Promise<T = any> {
   public status!: string  
   public resolve_executor_value!: any
   public reject_executor_value!: any
-
+  
   constructor(executor: Executor) {
     this.status = 'pending' // 起始等待状态
     this.resolve = (value: any): any => {
+      console.log("resolve===>value", value)
+
       if(this.status === 'pending') {
         this.status = 'success'
         this.resolve_executor_value = value
-
-        console.log("resolve===>value", value)
       }
       
     }
     this.reject = (reason: any): any => {
+      console.log("reject===>value", reason)
+    
       if(this.status === 'pending') {
         this.status = 'fail'
         this.reject_executor_value = reason
 
-        console.log("reject===>value", reason)
       }
     }
-    
+
     try {
       executor(this.resolve, this.reject)
     } catch (error: any) {
@@ -39,15 +40,19 @@ export default class Promise<T = any> {
   }
   
   then(resolveInThen: ResolveType, rejectInThen: RejectType) {
-    if(this.status === 'success') {
-      resolveInThen(this.resolve_executor_value)
-      console.log('resolveInthen被执行')
-    }
-    if(this.status === 'fail') {
-      rejectInThen(this.reject_executor_value)
-      console.log('rejectInThen被执行')
-    }
+    return new Promise((resolve, reject) => {
+      let result;
+      if(this.status === 'success') {
+        result = resolveInThen(this.resolve_executor_value)
+        resolve(result)
+      }
+      if(this.status === 'fail') {
+        result = rejectInThen(this.reject_executor_value)
+        reject(result)
+      }
+    })
   }
+
 }
 
 export {}
