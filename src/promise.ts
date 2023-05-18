@@ -102,6 +102,7 @@ export default class Promise<T = any> {
 
   static all(promises: Promise[]): Promise {
     return new Promise((resolve, reject) => {
+      let executorIndex = 0 // 定义变量来计算索引
       let allResolveSuccessValue: Array<any> = []
       promises.forEach((promise, index) => {
         promise.then(resolveSuccess => {
@@ -114,7 +115,8 @@ export default class Promise<T = any> {
 
       function ProcessData(resolveSuccess: any, index: number) {
         allResolveSuccessValue[index] = resolveSuccess
-        if(index === promises.length - 1) { // 所有的promise对象resolve函数全部执行完毕
+        executorIndex++
+        if(executorIndex === promises.length) { // 所有的promise对象resolve函数全部执行完毕
           resolve(allResolveSuccessValue)
         }
       }

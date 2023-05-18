@@ -4,7 +4,7 @@ let promise1 = new Promise((resolve, reject) => {
   console.log('第一个Promise的同步区域')
   setTimeout(() => {
     resolve('第一个异步操作')
-  }, 5)
+  }, 2000)
 })
 
 let promise2 = new Promise((resolve, reject) => {
@@ -18,7 +18,7 @@ let promise3 = new Promise((resolve, reject) => {
   console.log('第三个Promise的同步区域')
   setTimeout(() => {
     resolve('第三个异步操作')
-  }, 2000)
+  }, 5)
 })
 
 Promise.all([promise1, promise2, promise3]).then(value => {
